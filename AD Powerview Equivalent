@@ -1,3 +1,9 @@
-Import dll
+
+##### Without importing DLL
 $ADClass = [System.DirectoryServices.ActiveDirectory.Domain]
 $ADClass::GetCurrentDomain()
+
+
+##### Importing DLL (see file Microsoft.ActiveDirectory.Management.dll)
+Download and cd to directory
+Import-Module .\Microsoft.ActiveDirectory.Management.dll
