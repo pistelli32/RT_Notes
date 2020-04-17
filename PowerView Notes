@@ -1,0 +1,8 @@
+Invoke UserHunter
+ - finds machines on the local domain where specified users are logged into, 
+ 
+ Invoke UserHunter -CheckAccess
+ - an optionally check if the current user has local admin access to found machines
+
+
+
